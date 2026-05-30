@@ -1,5 +1,5 @@
 from pydantic import EmailStr, BaseModel
-from typing import Union
+from app.schema.user import User
 
 class UserInCreate(BaseModel):
     name:str
@@ -7,9 +7,9 @@ class UserInCreate(BaseModel):
     password:str
 
 class UserOutput(BaseModel):
-    id:int
-    name:str
-    email:EmailStr
+    access_token:str
+    refresh_token:str|None
+    user:User
 
 class UserInUpdate(BaseModel):
     id:int
@@ -21,5 +21,5 @@ class UserInLogin(BaseModel):
     email:EmailStr
     password:str
 
-class UserWithToken(BaseModel):
-    token:str
+class UserRefreshToken(BaseModel):
+    refresh_token:str

@@ -1,21 +1,20 @@
 from fastapi import APIRouter
-from app.schema.auth import UserInCreate,UserInLogin,UserOutput,UserWithToken
-from app.service.user_service import UserService
+from app.schema.auth import UserInCreate,UserInLogin,UserOutput
+from app.service.auth_service import AuthService
 
 authRouter=APIRouter()
 
-@authRouter.post("/login",status_code=200,response_model=UserWithToken)
+@authRouter.post("/login",status_code=200,response_model=UserOutput)
 def login(loginDetails:UserInLogin):
     try:
-      return UserService().login(userInput=loginDetails)
+      return AuthService().login(userInput=loginDetails)
     except Exception as error:
-      print(error)
       raise error
     
-@authRouter.post("/signup",status_code=200,response_model=UserWithToken)
+@authRouter.post("/signup",status_code=200,response_model=UserOutput)
 def signup(signupDetails:UserInCreate):
     try:
-      return UserService().create_user(userDetails=signupDetails)
+      return AuthService().sign_up(userDetails=signupDetails)
     except Exception as error:
       print(error)
       raise error
