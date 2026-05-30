@@ -10,7 +10,6 @@ class UserOutput(BaseModel):
     id:int
     name:str
     email:EmailStr
-    token:str
 
 class UserInUpdate(BaseModel):
     id:int

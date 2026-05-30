@@ -1,8 +1,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.util.init_db import create_tables
-from app.routers.auth import authRouter
-
+from app.routers.routes import register_routes
 @asynccontextmanager
 async def life_splan(app:FastAPI):
     create_tables()
@@ -10,8 +9,4 @@ async def life_splan(app:FastAPI):
     #
 
 app=FastAPI(lifespan=life_splan)
-app.include_router(router=authRouter, tags=["Auth"], prefix="/auth")
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+register_routes(app)

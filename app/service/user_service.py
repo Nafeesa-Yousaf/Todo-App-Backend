@@ -15,7 +15,7 @@ class UserService:
         hashPassword=HashHandler.hash_password(plain_password=userDetails.password)
         userDetails.password=hashPassword
         user= self._userRepository.create_user(userDetails=userDetails)
-        token=AuthHandler.sign_jwt(user_id=user[1])
+        token=AuthHandler.sign_jwt(user_id=user[0])
         return UserWithToken(token=token)
 
 
@@ -25,10 +25,18 @@ class UserService:
          user=self._userRepository.get_user_by_email(email=userInput.email)
          logging.info(user)
          if HashHandler.verify_password(plain_password=userInput.password,hash_password=user[3]):
-             token=AuthHandler.sign_jwt(user_id=user[1])
+             token=AuthHandler.sign_jwt(user_id=user[0])
              if token:
                  return UserWithToken(token=token)
              raise HTTPException(status_code=500,detail="Unable to process request.")
          else:
              raise HTTPException(status_code=400,detail="Incorrect Credentials")
 
+    def get_user_by_id(self,user_id:int):
+        user=UserRepository().get_user_by_id(user_id)
+        if user:
+            return user
+        raise HTTPException(
+            status_code=400,
+            detail="User not found"
+        )

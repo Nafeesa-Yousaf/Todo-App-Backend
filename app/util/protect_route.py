@@ -1,0 +1,32 @@
+from fastapi import HTTPException,Header,status
+from typing import Annotated,Union
+from app.security.auth_handler import AuthHandler
+from app.schema.auth import UserOutput
+from app.service.user_service import UserService
+import logging
+
+AUTH_PREFIX="Bearer "
+
+def get_current_user(authorization:str = Header(None)):
+    auth_exception=HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Invalid Authorization Credentials"
+    )
+    if not authorization:
+        logging.error("Token not found")
+        raise auth_exception
+    if not authorization.startswith(AUTH_PREFIX):
+        logging.error("No prefix")
+        raise auth_exception
+    payload=AuthHandler.decode_jwt(jwt_token=authorization[len(AUTH_PREFIX):])
+    if payload and payload["user_id"]:
+        try:
+            logging.info("-------------------------------")
+            logging.info(payload)
+            user=UserService().get_user_by_id(payload["user_id"])
+            return UserOutput(id=user[0],name=user[1],email=user[2])
+        except Exception as error:
+            raise error
+    logging.error("User_id not found")
+    raise auth_exception
+
