@@ -1,8 +1,9 @@
 import psycopg2 
 from psycopg2 import pool
 from contextlib import contextmanager
+from decouple import config
 
-DATABASE_URL="postgresql://user:password@localhost:5432/postgres"
+DATABASE_URL=config("DATABASE_URL")
 connection_pool=pool.SimpleConnectionPool(
     1,5,DATABASE_URL
 )
