@@ -19,7 +19,8 @@ class AuthService:
         createdUser= self._userRepository.create_user(userDetails=userDetails)
         access_token=JwtService.create_access_token(user_id=createdUser[0])
         refresh_token=JwtService.create_refresh_token(user_id=createdUser[0],user_email=createdUser[2])
-        self._authRepository.update_refresh_token(refresh_token=refresh_token,user_id=createdUser[0])
+        refresh_token_hash=HashService.hash_string(refresh_token)                
+        self._authRepository.update_refresh_token(refresh_token=refresh_token_hash,user_id=createdUser[0])
         return UserOutput(
             access_token=access_token,
             refresh_token=refresh_token,
@@ -39,7 +40,8 @@ class AuthService:
              token=JwtService.create_access_token(user_id=createdUser[0])
              if token:
                 refresh_token=JwtService.create_refresh_token(user_id=createdUser[0],user_email=createdUser[2])
-                self._authRepository.update_refresh_token(refresh_token=refresh_token,user_id=createdUser[0])
+                refresh_token_hash=HashService.hash_string(refresh_token)
+                self._authRepository.update_refresh_token(refresh_token=refresh_token_hash,user_id=createdUser[0])
                 return UserOutput(
                 access_token=token,
                 refresh_token=refresh_token,
@@ -64,7 +66,8 @@ class AuthService:
             hash_password=HashService.hash_password(plain_password=password.new_password)
             self._authRepository.change_password(new_password=hash_password,user_id=user[0])
             refresh_token=JwtService.create_refresh_token(user_id=user[0],user_email=user[2])
-            self._authRepository.update_refresh_token(refresh_token=refresh_token,user_id=user[0])
+            refresh_token_hash=HashService.hash_string(refresh_token)
+            self._authRepository.update_refresh_token(refresh_token=refresh_token_hash,user_id=user[0])
             access_token=JwtService.create_access_token(user_id=user[0])
             return {"message": "Password changed successfully","access_token":access_token,"refresh_token":refresh_token}
         else:

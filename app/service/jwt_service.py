@@ -3,6 +3,7 @@ import jwt
 import time
 from fastapi import HTTPException,status
 from app.repository.auth_repo import AuthRepository
+from app.service.hash_service import HashService
 
 JWT_SECRET=config("JWT_SECRET")
 JWT_ALGORITHM=config("JWT_ALGORITHM")
@@ -47,7 +48,8 @@ class JwtService:
         if decoded_token["expires"]<=time.time():
             HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail= "Refresh Token Expired")
         user_token=AuthRepository().get_refresh_token(decoded_token["user_id"])
-        if(user_token==refresh_token):
+        hash_token=HashService.hash_string(refresh_token)
+        if(user_token==hash_token):
             return decoded_token["user_id"]
         else:
             HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Refresh Token")

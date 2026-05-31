@@ -1,4 +1,5 @@
 from bcrypt import checkpw, hashpw , gensalt
+import hashlib
 
 class HashService:
     @staticmethod
@@ -13,3 +14,7 @@ class HashService:
         return hashpw(
             plain_password.encode("utf-8"),gensalt()
         ).decode("utf-8")
+    
+    @staticmethod 
+    def hash_string(input:str):
+        return hashlib.sha256(input.encode()).hexdigest()
