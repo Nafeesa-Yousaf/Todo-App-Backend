@@ -2,6 +2,7 @@ from decouple import config
 import jwt
 import time
 from fastapi import HTTPException,status
+from app.repository.auth_repo import AuthRepository
 
 JWT_SECRET=config("JWT_SECRET")
 JWT_ALGORITHM=config("JWT_ALGORITHM")
@@ -27,7 +28,7 @@ class JwtService:
         }
         token= jwt.encode(payload,JWT_SECRET,algorithm=JWT_ALGORITHM)
         return token
-    
+
     @staticmethod
     def decode_jwt(jwt_token:str)->dict:
         try:
@@ -39,4 +40,15 @@ class JwtService:
         except:
             print("unable to decode token")
             return None
+        
+    @staticmethod
+    def verify_refresh_token(refresh_token:str)->int:
+        decoded_token=jwt.decode(refresh_token,JWT_SECRET,algorithms=[JWT_ALGORITHM])
+        if decoded_token["expires"]<=time.time():
+            HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail= "Refresh Token Expired")
+        user_token=AuthRepository().get_refresh_token(decoded_token["user_id"])
+        if(user_token==refresh_token):
+            return decoded_token["user_id"]
+        else:
+            HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Refresh Token")
         

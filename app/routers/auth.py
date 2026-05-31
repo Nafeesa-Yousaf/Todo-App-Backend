@@ -18,3 +18,10 @@ def signup(signupDetails:UserInCreate):
     except Exception as error:
       print(error)
       raise error
+    
+@authRouter.post("/refresh-token",status_code=200,response_model=str)
+def refresh_access_token(refresh_token:str):
+   try:
+      return AuthService().refresh_access_token(refresh_token)
+   except Exception as error:
+      raise error

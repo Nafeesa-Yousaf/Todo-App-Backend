@@ -51,5 +51,9 @@ class AuthService:
              raise HTTPException(status_code=500,detail="Unable to process request.")
          else:
              raise HTTPException(status_code=400,detail="Incorrect Credentials")
-
+         
+    def refresh_access_token(self,refresh_token:str)->str:
+        user_id=JwtService.verify_refresh_token(refresh_token=refresh_token)
+        if user_id:
+            return JwtService.create_access_token(user_id=user_id)
    
