@@ -21,7 +21,11 @@ def get_current_user(authorization:str = Header(None)):
     if payload and payload["user_id"]:
         try:
             user=UserService().get_user_by_id(payload["user_id"])
-            return user
+            if (user):
+                if (user["token_version"]== payload["token_version"]):
+                    return user["user"]
+                else:
+                    raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="Invalid Access Token")
         except Exception as error:
             raise error
     raise auth_exception

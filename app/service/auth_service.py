@@ -20,7 +20,7 @@ class AuthService:
         access_token=JwtService.create_access_token(user_id=createdUser[0])
         refresh_token=JwtService.create_refresh_token(user_id=createdUser[0],user_email=createdUser[2])
         refresh_token_hash=HashService.hash_string(refresh_token)                
-        self._authRepository.update_refresh_token(refresh_token=refresh_token_hash,user_id=createdUser[0])
+        self._authRepository.update_auth_fields(user_id=createdUser[0],token_version="+1",refresh_token=refresh_token_hash)
         return UserOutput(
             access_token=access_token,
             refresh_token=refresh_token,
@@ -41,7 +41,7 @@ class AuthService:
              if token:
                 refresh_token=JwtService.create_refresh_token(user_id=createdUser[0],user_email=createdUser[2])
                 refresh_token_hash=HashService.hash_string(refresh_token)
-                self._authRepository.update_refresh_token(refresh_token=refresh_token_hash,user_id=createdUser[0])
+                self._authRepository.update_auth_fields(user_id=createdUser[0],token_version="+1",refresh_token=refresh_token_hash)
                 return UserOutput(
                 access_token=token,
                 refresh_token=refresh_token,
@@ -58,17 +58,17 @@ class AuthService:
     def refresh_access_token(self,refresh_token:str)->str:
         user_id=JwtService.verify_refresh_token(refresh_token=refresh_token)
         if user_id:
+            self._authRepository.update_auth_fields(user_id=user_id,token_version="+1",)
             return JwtService.create_access_token(user_id=user_id)
         
     def change_password(self,password:ChangePassword,current_user:UserOutput):
         user=self._userRepository.get_user_by_id(id=current_user.id)
         if HashService.verify_password(plain_password=password.current_password,hash_password=user[3]):
             hash_password=HashService.hash_password(plain_password=password.new_password)
-            self._authRepository.change_password(new_password=hash_password,user_id=user[0])
             refresh_token=JwtService.create_refresh_token(user_id=user[0],user_email=user[2])
             refresh_token_hash=HashService.hash_string(refresh_token)
-            self._authRepository.update_refresh_token(refresh_token=refresh_token_hash,user_id=user[0])
             access_token=JwtService.create_access_token(user_id=user[0])
+            self._authRepository.update_auth_fields(user_id=user[0],password=hash_password,refresh_token=refresh_token_hash,token_version="+1")
             return {"message": "Password changed successfully","access_token":access_token,"refresh_token":refresh_token}
         else:
             raise HTTPException(status_code=401,detail="Incorrect Current Password")

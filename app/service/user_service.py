@@ -5,14 +5,17 @@ from fastapi import HTTPException
 class UserService:
     def __init__(self):
         self._userRepository=UserRepository()
-    def get_user_by_id(self,user_id:int)->User:
+    def get_user_by_id(self,user_id:int):
         user=UserRepository().get_user_by_id(user_id)
         if user:
-            return User(
+            return {
+               "user": User(
                 id=user[0],
                 name=user[1],
                 email=user[2]
-            )
+            ),
+            "token_version":user[5]
+            }
         raise HTTPException(
             status_code=400,
             detail="User not found"

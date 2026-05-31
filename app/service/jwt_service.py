@@ -4,6 +4,7 @@ import time
 from fastapi import HTTPException,status
 from app.repository.auth_repo import AuthRepository
 from app.service.hash_service import HashService
+import  logging
 
 JWT_SECRET=config("JWT_SECRET")
 JWT_ALGORITHM=config("JWT_ALGORITHM")
@@ -13,8 +14,10 @@ REFRESH_TOKEN_EXPIRES=864000 #10 days
 class JwtService:
     @staticmethod
     def create_access_token(user_id:int)->str:
+        version=AuthRepository().get_token_version(user_id=user_id)
         payload={
             'user_id':user_id,
+            'token_version':version+1,
             'expires':time.time() +ACCESS_TOKEN_EXPIRE
         }
         token= jwt.encode(payload,JWT_SECRET,algorithm=JWT_ALGORITHM)

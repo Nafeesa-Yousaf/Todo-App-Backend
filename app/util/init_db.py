@@ -9,7 +9,8 @@ def create_tables():
             name varchar(125) not null,
             email varchar(125) not null,
             password text not null,
-            refresh_token text
+            refresh_token text,
+            token_version int not null
             )"""
         )
         cur.execute(
