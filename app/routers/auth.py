@@ -1,6 +1,7 @@
-from fastapi import APIRouter
-from app.schema.auth import UserInCreate,UserInLogin,UserOutput
+from fastapi import APIRouter,Depends
+from app.schema.auth import UserInCreate,UserInLogin,UserOutput,ChangePassword
 from app.service.auth_service import AuthService
+from app.util.protect_route import get_current_user
 
 authRouter=APIRouter()
 
@@ -23,5 +24,12 @@ def signup(signupDetails:UserInCreate):
 def refresh_access_token(refresh_token:str):
    try:
       return AuthService().refresh_access_token(refresh_token)
+   except Exception as error:
+      raise error
+   
+@authRouter.post("/change-password",status_code=200)
+def change_password(password:ChangePassword,current_user: UserOutput=Depends(get_current_user)):
+   try:
+      return AuthService().change_password(password=password,current_user=current_user)
    except Exception as error:
       raise error

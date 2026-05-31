@@ -23,3 +23,11 @@ class AuthRepository():
             else:
                 return None
 
+    def change_password(self,new_password,user_id:int):
+        with get_db() as conn:
+            cur=conn.cursor()
+            cur.execute(
+                """Update users set password=%s where id=%s""",
+                    (new_password,user_id,)
+            )
+            conn.commit()

@@ -1,10 +1,11 @@
 from app.repository.user_repo import UserRepository
 from app.repository.auth_repo import AuthRepository
-from app.schema.auth import UserInCreate,UserInLogin,UserOutput
+from app.schema.auth import UserInCreate,UserInLogin,UserOutput,ChangePassword
 from app.service.hash_service import HashService
 from app.service.jwt_service import JwtService
 from app.schema.user import User
 from fastapi import HTTPException
+import logging
 
 class AuthService:
     def __init__(self):
@@ -56,4 +57,16 @@ class AuthService:
         user_id=JwtService.verify_refresh_token(refresh_token=refresh_token)
         if user_id:
             return JwtService.create_access_token(user_id=user_id)
+        
+    def change_password(self,password:ChangePassword,current_user:UserOutput):
+        user=self._userRepository.get_user_by_id(id=current_user.id)
+        if HashService.verify_password(plain_password=password.current_password,hash_password=user[3]):
+            hash_password=HashService.hash_password(plain_password=password.new_password)
+            self._authRepository.change_password(new_password=hash_password,user_id=user[0])
+            refresh_token=JwtService.create_refresh_token(user_id=user[0],user_email=user[2])
+            self._authRepository.update_refresh_token(refresh_token=refresh_token,user_id=user[0])
+            access_token=JwtService.create_access_token(user_id=user[0])
+            return {"message": "Password changed successfully","access_token":access_token,"refresh_token":refresh_token}
+        else:
+            raise HTTPException(status_code=401,detail="Incorrect Current Password")
    

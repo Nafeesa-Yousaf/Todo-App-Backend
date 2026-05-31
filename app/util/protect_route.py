@@ -21,9 +21,8 @@ def get_current_user(authorization:str = Header(None)):
     if payload and payload["user_id"]:
         try:
             user=UserService().get_user_by_id(payload["user_id"])
-            return UserOutput(id=user[0],name=user[1],email=user[2])
+            return user
         except Exception as error:
             raise error
-    logging.error("User_id not found")
     raise auth_exception
 
