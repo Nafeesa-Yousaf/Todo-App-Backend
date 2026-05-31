@@ -5,12 +5,12 @@ from app.service.hash_service import HashService
 from app.service.jwt_service import JwtService
 from app.schema.user import User
 from fastapi import HTTPException
-import logging
 
 class AuthService:
     def __init__(self):
         self._userRepository=UserRepository()
         self._authRepository=AuthRepository()
+
     def sign_up(self,userDetails:UserInCreate)->UserOutput:
         if(self._userRepository.get_user_by_email(email=userDetails.email)):
             raise HTTPException(status_code=400,detail="This Email already exists")
@@ -73,3 +73,6 @@ class AuthService:
         else:
             raise HTTPException(status_code=401,detail="Incorrect Current Password")
    
+    def logout(self,current_user:UserOutput):
+        self._authRepository.update_auth_fields(user_id=current_user.id,refresh_token="",token_version="+1")
+        return {"details":"Logout Successfully"}

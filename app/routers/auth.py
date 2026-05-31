@@ -33,3 +33,10 @@ def change_password(password:ChangePassword,current_user: UserOutput=Depends(get
       return AuthService().change_password(password=password,current_user=current_user)
    except Exception as error:
       raise error
+   
+@authRouter.get("/logout",status_code=200)
+def logout(current_user: UserOutput=Depends(get_current_user)):
+   try:
+      return AuthService().logout(current_user=current_user)
+   except Exception as error:
+      raise error
