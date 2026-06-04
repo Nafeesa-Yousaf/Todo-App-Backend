@@ -5,6 +5,9 @@ A secure Todo Backend API built using **FastAPI** and **PostgreSQL**. This appli
 
 The project is configured for deployment on **Vercel** serverless functions.
 
+🚀 **Live API URL**: [https://todo-app-backend-plum.vercel.app](https://todo-app-backend-plum.vercel.app)  
+📖 **Interactive Swagger Docs**: [https://todo-app-backend-plum.vercel.app/docs](https://todo-app-backend-plum.vercel.app/docs)
+
 ---
 
 ## 🚀 Features
