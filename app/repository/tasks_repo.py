@@ -3,7 +3,7 @@ from app.core.database import get_db
 from app.schema.task import TaskCreate,TaskUpdate
 from psycopg2.extras import RealDictCursor
 
-class TaskRepo():
+class TaskRepository():
     def create_task(self,task:TaskCreate, user_id:int):
         with get_db() as conn:
             cur=conn.cursor(cursor_factory=RealDictCursor)
@@ -54,5 +54,13 @@ class TaskRepo():
                 (task_id,)
             )
             conn.commit()
-        
+    
+    def delete_all_tasks(self,user_id:int):
+        with get_db() as conn:
+            cur=conn.cursor()
+            cur.execute(
+                f"""Delete from tasks where user_id=%s""",
+                (user_id,)
+            )
+            conn.commit()
         

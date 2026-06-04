@@ -44,3 +44,12 @@ class UserRepository():
             )
             res=cur.fetchone()
             return res
+        
+    def delete_user(self,id:int):
+        with get_db() as conn:
+            cur=conn.cursor()
+            cur.execute(
+                """Delete from users where id=%s""",
+                (id,)
+            )
+            conn.commit()

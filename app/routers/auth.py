@@ -40,3 +40,7 @@ def logout(current_user: UserOutput=Depends(get_current_user)):
       return AuthService().logout(current_user=current_user)
    except Exception as error:
       raise error
+   
+@authRouter.get("/delete-account",status_code=200)
+def delete_account(current_user: UserOutput=Depends(get_current_user)):
+   return AuthService().delete_account(user_id=current_user.id)

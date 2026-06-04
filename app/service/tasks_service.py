@@ -1,10 +1,10 @@
 from app.schema.task import TaskCreate, TaskResponse, TaskUpdate
-from app.repository.tasks_repo import TaskRepo 
+from app.repository.tasks_repo import TaskRepository 
 from fastapi import HTTPException,status
 
 class TaskService():
     def __init__(self):
-        self._taskRepo=TaskRepo()
+        self._taskRepo=TaskRepository()
 
     def create_task(self,task:TaskCreate,user_id:int):
         try:

@@ -5,11 +5,13 @@ from app.service.hash_service import HashService
 from app.service.jwt_service import JwtService
 from app.schema.user import User
 from fastapi import HTTPException
+from app.repository.tasks_repo import TaskRepository
 
 class AuthService:
     def __init__(self):
         self._userRepository=UserRepository()
         self._authRepository=AuthRepository()
+        self._taskRepository=TaskRepository()
 
     def sign_up(self,userDetails:UserInCreate)->UserOutput:
         if(self._userRepository.get_user_by_email(email=userDetails.email)):
@@ -76,3 +78,11 @@ class AuthService:
     def logout(self,current_user:UserOutput):
         self._authRepository.update_auth_fields(user_id=current_user.id,refresh_token="",token_version="+1")
         return {"details":"Logout Successfully"}
+    
+    def delete_account(self,user_id:int):
+        try:
+            self._taskRepository.delete_all_tasks(user_id=user_id)
+            self._userRepository.delete_user(id=user_id)
+            return {"details":"Account Deleted Successfully"}
+        except Exception as error:
+            raise error
