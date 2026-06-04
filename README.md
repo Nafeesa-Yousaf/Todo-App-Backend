@@ -1,5 +1,6 @@
-# TaskFlow API - Todo Backend
+# Todo App Backend
 
+## Overview
 A secure Todo Backend API built using **FastAPI** and **PostgreSQL**. This application features user authentication using JWTs, refresh token rotation, token versioning for secure logouts/password changes, and complete CRUD operations for tasks and users.
 
 The project is configured for deployment on **Vercel** serverless functions.
