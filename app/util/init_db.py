@@ -14,22 +14,18 @@ def create_tables():
             )"""
         )
         cur.execute(
-            """
-            DO $$
+           """DO $$
             BEGIN
-            IF NOT EXISTS (
-            SELECT 1 FROM pg_type WHERE typname = 'priority_level'
-            ) THEN
-            CREATE TYPE priority_level AS ENUM ('high', 'medium', 'low');
+            IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'priority_level') THEN
+            CREATE TYPE priority_level AS ENUM ('low', 'medium', 'high');
             END IF;
-            END $$;
-            """
+            END$$;"""
         )
         cur.execute(
             """Create table if not exists Tasks(
             id SERIAL primary key,
             user_id int REFERENCES users(id),
-            name varchar(250) not null,
+            title varchar(250) not null,
             description text,
             is_completed boolean default false,
             priority priority_level default 'low'
