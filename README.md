@@ -5,9 +5,6 @@ A secure Todo Backend API built using **FastAPI** and **PostgreSQL**. This appli
 
 The project is configured for deployment on **Vercel** serverless functions.
 
-### 📐 Application Flow
-![Application Flow](flow%20diagram.png)
-
 ---
 
 ## 🚀 Features
@@ -31,6 +28,11 @@ The project is configured for deployment on **Vercel** serverless functions.
 - **Update Task**: Dynamically update task details (title, description, completion status, or priority level).
 - **Delete Task**: Permanently remove a specific task.
 - **Priority Classification**: Tasks support priority levels (`low`, `medium`, `high`) powered by PostgreSQL custom ENUM types.
+
+---
+
+### 📐 Application Flow
+![Application Flow](flow%20diagram.png)
 
 ---
 
