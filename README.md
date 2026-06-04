@@ -3,11 +3,6 @@
 ## Overview
 A secure Todo Backend API built using **FastAPI** and **PostgreSQL**. This application features user authentication using JWTs, refresh token rotation, token versioning for secure logouts/password changes, and complete CRUD operations for tasks and users.
 
-The project is configured for deployment on **Vercel** serverless functions.
-
-🚀 **Live API URL**: [https://todo-app-backend-plum.vercel.app](https://todo-app-backend-plum.vercel.app)  
-📖 **Interactive Swagger Docs**: [https://todo-app-backend-plum.vercel.app/docs](https://todo-app-backend-plum.vercel.app/docs)
-
 ---
 
 ## 🚀 Features
@@ -103,6 +98,13 @@ todo_proj/
 | **GET** | `/todo/get-tasks` | Get all tasks belonging to the current user | **Yes** |
 | **POST** | `/todo/{task_id}/update-task` | Modify attributes of a specific task | **Yes** |
 | **GET** | `/todo/{task_id}/delete-task` | Delete a specific task | **Yes** |
+
+---
+
+The project is configured for deployment on **Vercel** serverless functions.
+
+🚀 **Live API URL**: [https://todo-app-backend-plum.vercel.app](https://todo-app-backend-plum.vercel.app)  
+📖 **Interactive Swagger Docs**: [https://todo-app-backend-plum.vercel.app/docs](https://todo-app-backend-plum.vercel.app/docs)
 
 ---
 
