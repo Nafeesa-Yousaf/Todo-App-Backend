@@ -5,6 +5,9 @@ A secure Todo Backend API built using **FastAPI** and **PostgreSQL**. This appli
 
 The project is configured for deployment on **Vercel** serverless functions.
 
+### 📐 Application Flow
+![Application Flow](flow%20diagram.png)
+
 ---
 
 ## 🚀 Features
